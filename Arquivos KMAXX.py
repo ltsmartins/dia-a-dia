@@ -4,6 +4,10 @@ import shutil as st
 import datetime
 import PySimpleGUI as sg
 
+dia = datetime.date.today().day
+mes = datetime.date.today().month
+ano = datetime.date.today().year
+
 layout = [
     [sg.Text('Conversão dos arquivos em EXCEL.XLS para EXCEL.XLSX')],
     [sg.Button('Ok', pad=(110, 0)), sg.Button('Quit', pad=(110, 0))]
@@ -11,44 +15,26 @@ layout = [
 
 janela1 = sg.Window('ARQUIVOS EXCEL KMAXX', layout=layout)
 
-self, values = janela1.read()
+resposta, values = janela1.read()
 
-if self == 'Ok':
+if resposta == 'Ok':
 
     try:
-
-        dia = datetime.date.today().day
-        mes = datetime.date.today().month
-        ano = datetime.date.today().year
-
-
-        #LESTE
         p.save_book_as(file_name='Z:/Kmaxx/1- SP Leste Matriz/matriz.xls',
                     dest_file_name='Z:/Kmaxx/1- SP Leste Matriz/{}/XLSX/matriz_{}{}{}.xlsx'.format(ano,dia,mes,ano))
 
-
-
-        #PR
         p.save_book_as(file_name='Z:/Kmaxx/2- PR/pr.xls',
                     dest_file_name='Z:/Kmaxx/2- PR/{}/XLSX/pr_{}{}{}.xlsx'.format(ano,dia,mes,ano))
 
-
-        #SOR
         p.save_book_as(file_name='Z:/Kmaxx/4- Sorocaba/sorocaba.xls',
                     dest_file_name='Z:/Kmaxx/4- Sorocaba/{}/XLSX/sorocaba_{}{}{}.xlsx'.format(ano,dia,mes,ano))
 
-
-        #SJC
         p.save_book_as(file_name='Z:/Kmaxx/5- SJC/sjc.xls',
                     dest_file_name='Z:/Kmaxx/5- SJC/{}/XLSX/sjc_{}{}{}.xlsx'.format(ano,dia,mes,ano))
 
-
-        #SUL
         p.save_book_as(file_name='Z:/Kmaxx/7- SP Sul/sul.xls',
                     dest_file_name='Z:/Kmaxx/7- SP Sul/{}/XLSX/sul_{}{}{}.xlsx'.format(ano,dia,mes,ano))
 
-
-        #SJRP
         p.save_book_as(file_name='Z:/Kmaxx/8- SJRP/sjrp.xls',
                     dest_file_name='Z:/Kmaxx/8- SJRP/{}/XLSX/sjrp_{}{}{}.xlsx'.format(ano,dia,mes,ano))
 
@@ -86,8 +72,5 @@ if self == 'Ok':
 
         janelaSuc.close()
 
-elif self == WINDOW_CLOSED or self == 'Quit':
+elif resposta == WINDOW_CLOSED or resposta == 'Quit':
         janela1.close()
-        
-
-
