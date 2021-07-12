@@ -1,12 +1,43 @@
 from PySimpleGUI.PySimpleGUI import WINDOW_CLOSED
 import pyexcel as p
 import shutil as st
-import datetime
+from datetime import date
 import PySimpleGUI as sg
+from time import sleep
 
-dia = datetime.date.today().day
-mes = datetime.date.today().month
-ano = datetime.date.today().year
+dia = date.today().day
+mes = date.today().month
+ano = date.today().year
+
+listerror = []
+
+
+def txtGen(txt):
+    layoutGen = [
+        [sg.Text(f'{txt}')],
+        [sg.Ok()]
+    ]
+    janelaGen = sg.Window('ATENÇÃO', layout=layoutGen)
+    janelaGen.read()
+
+
+def errArq(arquivo):
+    layoutArq = [
+        [sg.Text(f'ERRO NO ARQUIVO {arquivo}')],
+        [sg.Ok()]
+    ]
+    janelaArq = sg.Window('ERRO ARQUIVO', layout=layoutArq)
+    janelaArq.read()
+
+
+def updtBar(x):
+    progress_bar.UpdateBar(x, 6)
+    sleep(.5)
+
+
+layoutBarp = [[sg.Text('Progresso')],
+              [sg.ProgressBar(1, orientation='h', size=(20, 20), key='progress')],
+              ]
 
 layout = [
     [sg.Text('Conversão dos arquivos em EXCEL.XLS para EXCEL.XLSX')],
@@ -18,59 +49,68 @@ janela1 = sg.Window('ARQUIVOS EXCEL KMAXX', layout=layout)
 resposta, values = janela1.read()
 
 if resposta == 'Ok':
+    janela1.close()
+    unidade = 1
+    windowBar = sg.Window('PROGRESSO CONVERSAO', layout=layoutBarp).Finalize()
+    progress_bar = windowBar.FindElement('progress')
 
     try:
-        p.save_book_as(file_name='Z:/Kmaxx/1- SP Leste Matriz/matriz.xls',
-                    dest_file_name='Z:/Kmaxx/1- SP Leste Matriz/{}/XLSX/matriz_{}{}{}.xlsx'.format(ano,dia,mes,ano))
-
-        p.save_book_as(file_name='Z:/Kmaxx/2- PR/pr.xls',
-                    dest_file_name='Z:/Kmaxx/2- PR/{}/XLSX/pr_{}{}{}.xlsx'.format(ano,dia,mes,ano))
-
-        p.save_book_as(file_name='Z:/Kmaxx/4- Sorocaba/sorocaba.xls',
-                    dest_file_name='Z:/Kmaxx/4- Sorocaba/{}/XLSX/sorocaba_{}{}{}.xlsx'.format(ano,dia,mes,ano))
-
-        p.save_book_as(file_name='Z:/Kmaxx/5- SJC/sjc.xls',
-                    dest_file_name='Z:/Kmaxx/5- SJC/{}/XLSX/sjc_{}{}{}.xlsx'.format(ano,dia,mes,ano))
-
-        p.save_book_as(file_name='Z:/Kmaxx/7- SP Sul/sul.xls',
-                    dest_file_name='Z:/Kmaxx/7- SP Sul/{}/XLSX/sul_{}{}{}.xlsx'.format(ano,dia,mes,ano))
-
-        p.save_book_as(file_name='Z:/Kmaxx/8- SJRP/sjrp.xls',
-                    dest_file_name='Z:/Kmaxx/8- SJRP/{}/XLSX/sjrp_{}{}{}.xlsx'.format(ano,dia,mes,ano))
-
-        st.move('Z:/Kmaxx/1- SP Leste Matriz/matriz.xls', 'Z:/Kmaxx/1- SP Leste Matriz/{}/XLS/matriz_{}{}{}.xls'.format(ano,dia,mes,ano))
-        st.move('Z:/Kmaxx/2- PR/pr.xls', 'Z:/Kmaxx/2- PR/{}/XLS/pr_{}{}{}.xls'.format(ano,dia,mes,ano))
-        st.move('Z:/Kmaxx/4- Sorocaba/sorocaba.xls', 'Z:/Kmaxx/4- Sorocaba/{}/XLS/sorocaba_{}{}{}.xls'.format(ano,dia,mes,ano))
-        st.move('Z:/Kmaxx/5- SJC/sjc.xls', 'Z:/Kmaxx/5- SJC/{}/XLS/sjc_{}{}{}.xls'.format(ano,dia,mes,ano))
-        st.move('Z:/Kmaxx/7- SP Sul/sul.xls', 'Z:/Kmaxx/7- SP Sul/{}/XLS/sul_{}{}{}.xls'.format(ano,dia,mes,ano))
-        st.move('Z:/Kmaxx/8- SJRP/sjrp.xls', 'Z:/Kmaxx/8- SJRP/{}/XLS/sjrp_{}{}{}.xls'.format(ano,dia,mes,ano))
-
-        janela1.close()
-        
+        updtBar(0)
+        p.save_book_as(file_name=f'Z:\Kmaxx\{unidade}.xls',
+                       dest_file_name=f'Z:\Kmaxx\SP Leste Matriz\{ano}\XLSX\matriz_{dia}{mes}{ano}.xlsx')
+        st.move(f'Z:\Kmaxx\{unidade}.xls', f'Z:\Kmaxx\SP Leste Matriz\{ano}\XLS\matriz_{dia}{mes}{ano}.xls')
     except:
-        layoutErr = [
-            [sg.Text('Um erro ocorreu. Verifique o nome dos arquivos e tente novamente.')],
-            [sg.Text('matriz.xls/pr.xls/sorocaba.xls/sjc.xls/sul.xls/sjrp.xls')],
-            [sg.Button('Ok')]
-        ]
+        listerror.append('MATRIZ.xls')
+    updtBar(1)
 
-        janelaErr = sg.Window('ERRO NOS ARQUIVOS', layout=layoutErr)
+    unidade = 2
+    try:
+        p.save_book_as(file_name=f'Z:\Kmaxx\{unidade}.xls',
+                       dest_file_name=f'Z:\Kmaxx\PR\{ano}\XLSX\pr_{dia}{mes}{ano}.xlsx')
+        st.move(f'Z:\Kmaxx\{unidade}.xls', f'Z:\Kmaxx\PR\{ano}\XLS\pr_{dia}{mes}{ano}.xls')
+    except:
+        listerror.append('PR.xls')
+    updtBar(2)
+    unidade = 4
+    try:
+        p.save_book_as(file_name=f'Z:\Kmaxx\{unidade}.xls',
+                       dest_file_name=f'Z:\Kmaxx\Sorocaba\{ano}\XLSX\sorocaba_{dia}{mes}{ano}.xlsx')
+        st.move(f'Z:\Kmaxx\{unidade}.xls', f'Z:\Kmaxx\Sorocaba\{ano}\XLS\sorocaba_{dia}{mes}{ano}.xls')
+    except:
+        listerror.append('SOROCABA.xls')
+    updtBar(3)
+    unidade = 5
+    try:
+        p.save_book_as(file_name=f'Z:\Kmaxx\{unidade}.xls',
+                       dest_file_name=f'Z:\Kmaxx\SJC\{ano}\XLSX\sjc_{dia}{mes}{ano}.xlsx')
+        st.move(f'Z:\Kmaxx\{unidade}.xls', f'Z:\Kmaxx\SJC\{ano}\XLS\sjc_{dia}{mes}{ano}.xls')
+    except:
+        listerror.append('SJC.xls')
+    updtBar(4)
+    unidade = 7
+    try:
+        p.save_book_as(file_name=f'Z:\Kmaxx\{unidade}.xls',
+                       dest_file_name='Z:\Kmaxx\SP Sul\{}\XLSX\sul_{}{}{}.xlsx'.format(ano, dia, mes, ano))
+        st.move(f'Z:\Kmaxx\{unidade}.xls', f'Z:\Kmaxx\SP Sul\{ano}\XLS\sul_{dia}{mes}{ano}.xls')
+    except:
+        listerror.append('SUL.xls')
+    updtBar(5)
+    unidade = 8
+    try:
+        p.save_book_as(file_name=f'Z:\Kmaxx\{unidade}.xls',
+                       dest_file_name=f'Z:\Kmaxx\SJRP\{ano}\XLSX\sjrp_{dia}{mes}{ano}.xlsx')
+        st.move(f'Z:\Kmaxx\{unidade}.xls', f'Z:\Kmaxx\SJRP\{ano}\XLS\sjrp_{dia}{mes}{ano}.xls')
+    except:
+        listerror.append('SJRP')
+    updtBar(6)
 
-        self, values = janelaErr.read()
+    windowBar.close()
 
-        janelaErr.close()
+    if len(listerror) >= 1:
+        txtGen(f'ERRO NO(S) ITEM(NS): {listerror}\nFavor verificar se o arquivo está no caminho Z:\Kmaxx\ NUMERO_UNIDADE.XLS')
 
     else:
-        layoutSuc = [
-            [sg.Text('Os arquivos foram convertidos com êxito!')],
-            [sg.Button('Ok')]
-        ]
-
-        janelaSuc = sg.Window('Arquivos KMAXX', layout=layoutSuc)
-
-        self, values = janelaSuc.read()
-
-        janelaSuc.close()
+        txtGen('TAREFA CONCLUÍDA COM ÊXITO EM TODOS OS ARQUIVOS.')
 
 elif resposta == WINDOW_CLOSED or resposta == 'Quit':
-        janela1.close()
+    janela1.close()
